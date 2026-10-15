@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 @dataclass
 class TokenLogprob:
     """Log probability information for a single token."""
+
     token: str
     logprob: float
 
@@ -14,6 +15,7 @@ class TokenLogprob:
 @dataclass
 class LLMResponse:
     """Response from an LLM including optional logprob info."""
+
     text: str
     logprobs: list[list[TokenLogprob]] = field(default_factory=list)
     prompt_tokens: int = 0

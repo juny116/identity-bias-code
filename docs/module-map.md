@@ -1,0 +1,72 @@
+# 파일과 모듈 대응표
+
+공통 실행 명령은 `python -m identity_bias list`에서 확인합니다. Python API는 새 패키지 경로로 import합니다.
+
+| 이전 경로 | 현재 경로 |
+|---|---|
+| `experiments/run_solver.py` | `identity_bias/workflows/generate_solutions.py` |
+| `experiments/run_identity_swap.py` | `identity_bias/workflows/evaluate_authorship.py` |
+| `experiments/run_solver_critic_matrix.py` | `identity_bias/workflows/compare_solver_critic.py` |
+| `experiments/run_interface_confound.py` | `identity_bias/workflows/evaluate_verdict_interfaces.py` |
+| `experiments/run_subjective_confound.py` | `identity_bias/workflows/evaluate_pairwise_interfaces.py` |
+| `experiments/interface_confound/interfaces.py` | `identity_bias/critic/verdict_interfaces.py` |
+| `experiments/subjective/interfaces_pairwise.py` | `identity_bias/critic/pairwise_interfaces.py` |
+| `experiments/subjective/prepare_rewardbench.py` | `identity_bias/data/prepare_rewardbench.py` |
+| `identity_bias/logging/result_logger.py` | `identity_bias/io/result_logger.py` |
+| `analysis/label_fix.py` | `identity_bias/analysis/label_corrections.py` |
+| `analysis/item_disagreement.py` | `identity_bias/analysis/verdict_disagreement.py` |
+| `analysis/relabel_mcq.py` | `identity_bias/analysis/relabel_choice_answers.py` |
+| `analysis/drop_truncated.py` | `identity_bias/analysis/remove_truncated_responses.py` |
+| `analysis/label_noise_estimate.py` | `identity_bias/analysis/estimate_label_errors.py` |
+| `analysis/think_vs_nothink.py` | `identity_bias/analysis/compare_reasoning_modes.py` |
+| `analysis/reference_analysis.py` | `identity_bias/analysis/compare_reference_answers.py` |
+| `analysis/subjective_analysis.py` | `identity_bias/analysis/pairwise_preference_metrics.py` |
+| `analysis/label_audit_sample.py` | `identity_bias/analysis/sample_label_audit.py` |
+| `analysis/parse_audit_confound.py` | `identity_bias/analysis/audit_verdict_parsing.py` |
+| `analysis/interface_confound_analysis.py` | `identity_bias/analysis/verdict_interface_metrics.py` |
+| `archive/old-framing/analyze_results.py` | `identity_bias/analysis/extended/solver_critic_summary.py` |
+| `archive/old-framing/revision_v4_analyses.py` | `identity_bias/analysis/extended/abstention_and_vote_aggregation.py` |
+| `archive/old-framing/revision_v3_analysis.py` | `identity_bias/analysis/extended/pipeline_utility_and_calibration.py` |
+| `archive/old-framing/falsifier_full.py` | `identity_bias/analysis/extended/cross_model_authorship_effects.py` |
+| `archive/old-framing/freeze_figures.py` | `identity_bias/analysis/extended/plot_critique_metrics.py` |
+| `archive/old-framing/revision_analysis.py` | `identity_bias/analysis/extended/mixed_effects_and_robustness.py` |
+| `archive/old-framing/preliminary_sanity.py` | `identity_bias/analysis/extended/ambiguity_sensitivity_checks.py` |
+| `archive/old-framing/verdict_repair_analysis.py` | `identity_bias/analysis/extended/verdict_repair_agreement.py` |
+| `archive/old-framing/parser_artifact_v2.py` | `identity_bias/analysis/extended/parser_policy_sensitivity.py` |
+| `archive/old-framing/parser_artifact_audit.py` | `identity_bias/analysis/extended/audit_critique_parsing.py` |
+| `archive/old-framing/appendix_extras.py` | `identity_bias/analysis/extended/dataset_repair_and_calibration.py` |
+| `archive/old-framing/repair_quality_and_calibration.py` | `identity_bias/analysis/extended/repair_quality_and_calibration.py` |
+| `archive/old-framing/preliminary_deference.py` | `identity_bias/analysis/extended/authorship_and_ambiguity.py` |
+| `archive/old-framing/revision_v3_length_sensitivity.py` | `identity_bias/analysis/extended/solution_length_sensitivity.py` |
+| `archive/old-framing/falsifier_strong.py` | `identity_bias/analysis/extended/strong_author_label_effects.py` |
+| `archive/old-framing/revision_v2_analysis.py` | `identity_bias/analysis/extended/field_order_and_majority_voting.py` |
+| `archive/old-framing/freeze_artifacts.py` | `identity_bias/analysis/extended/build_critique_tables.py` |
+| `archive/old-framing/experiments/run_context_separation.py` | `identity_bias/workflows/extended/compare_session_context.py` |
+| `archive/old-framing/experiments/run_n_of_k_voting.py` | `identity_bias/workflows/extended/evaluate_majority_voting.py` |
+| `archive/old-framing/experiments/run_caveat_a_ablation.py` | `identity_bias/workflows/extended/evaluate_critique_interfaces.py` |
+| `archive/old-framing/experiments/run_gated_mitigation.py` | `identity_bias/workflows/extended/repair_rejected_solutions.py` |
+| `legacy/reasoning-error-detect/calc_gen.py` | `legacy/reasoning-error-detect/generation_error_rates.py` |
+| `legacy/reasoning-error-detect/check_length.py` | `legacy/reasoning-error-detect/response_length_statistics.py` |
+| `legacy/reasoning-error-detect/overlap.py` | `legacy/reasoning-error-detect/solver_detector_agreement.py` |
+| `legacy/reasoning-error-detect/union.py` | `legacy/reasoning-error-detect/cross_model_solution_coverage.py` |
+| `legacy/reasoning-error-detect/fermi.py` | `legacy/reasoning-error-detect/generate_fermi_estimates.py` |
+| `legacy/reasoning-error-detect/temp_corr.py` | `legacy/reasoning-error-detect/score_correlation.py` |
+| `legacy/reasoning-error-detect/print_inout.py` | `legacy/reasoning-error-detect/inspect_predictions.py` |
+| `legacy/reasoning-error-detect/sample_error_data.py` | `legacy/reasoning-error-detect/build_error_examples.py` |
+| `legacy/reasoning-error-detect/eval_bin.py` | `legacy/reasoning-error-detect/binned_detection_accuracy.py` |
+| `legacy/reasoning-error-detect/test.py` | `legacy/reasoning-error-detect/resampled_solution_accuracy.py` |
+| `legacy/reasoning-error-detect/error_detect.py` | `legacy/reasoning-error-detect/detect_reasoning_errors.py` |
+| `legacy/reasoning-error-detect/corr.py` | `legacy/reasoning-error-detect/solution_detection_scores.py` |
+| `legacy/reasoning-error-detect/overlap2.py` | `legacy/reasoning-error-detect/detector_coverage.py` |
+| `legacy/reasoning-error-detect/eval.py` | `legacy/reasoning-error-detect/score_predictions.py` |
+| `legacy/reasoning-error-detect/main.py` | `legacy/reasoning-error-detect/generate_responses.py` |
+| `legacy/reasoning-error-detect/renew_ans.py` | `legacy/reasoning-error-detect/regenerate_answers.py` |
+| `legacy/reasoning-error-detect/sample_error_ablation.py` | `legacy/reasoning-error-detect/build_error_ablation.py` |
+| `legacy/reasoning-error-detect/resample.py` | `legacy/reasoning-error-detect/resample_model_outputs.py` |
+| `legacy/reasoning-error-detect/utils.py` | `legacy/reasoning-error-detect/response_utils.py` |
+| `legacy/reasoning-error-detect/analysis/error_anal.py` | `legacy/reasoning-error-detect/analysis/error_verdict_agreement.py` |
+| `legacy/reasoning-error-detect/analysis/inter.py` | `legacy/reasoning-error-detect/analysis/cross_model_detection.py` |
+| `legacy/reasoning-error-detect/data/MATH.py` | `legacy/reasoning-error-detect/data/prepare_math.py` |
+| `legacy/reasoning-error-detect/data/gsm.py` | `legacy/reasoning-error-detect/data/prepare_gsm8k.py` |
+| `legacy/reasoning-error-detect/data/utils.py` | `legacy/reasoning-error-detect/data/answer_parsing.py` |
+| `legacy/reasoning-error-detect/deprecated/eval_error.py` | `legacy/reasoning-error-detect/deprecated/score_error_labels.py` |

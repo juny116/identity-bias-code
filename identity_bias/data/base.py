@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 @dataclass
 class Problem:
     """A reasoning problem from a benchmark dataset."""
+
     id: str
     question: str
     ground_truth: str
@@ -17,6 +18,7 @@ class Problem:
 @dataclass
 class Solution:
     """A generated solution to a problem."""
+
     problem_id: str
     chain_of_thought: str
     final_answer: str

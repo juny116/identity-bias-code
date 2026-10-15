@@ -4,30 +4,31 @@ import json
 import re
 from dataclasses import dataclass
 
-from identity_bias.config import IdentityCondition
-from identity_bias.data.base import Problem, Solution
 from identity_bias.critic.prompts import (
     build_critic_messages,
     build_verdict_only_messages,
     strip_thinking,
 )
+from identity_bias.data.base import Problem, Solution
 from identity_bias.llm.base import BaseLLM
+from identity_bias.types import IdentityCondition
 
 
 @dataclass
 class CritiqueResult:
     """Result of a critic's evaluation."""
+
     problem_id: str
     identity_condition: str
     critic_model: str
     solver_model: str
     # Critique outputs (full call: verdict + repair)
-    is_correct: bool          # Critic's judgment
+    is_correct: bool  # Critic's judgment
     error_description: str | None
     corrected_answer: str | None
     confidence: float
     # Ground truth
-    actually_correct: bool    # Whether the solution was actually correct
+    actually_correct: bool  # Whether the solution was actually correct
     # Raw data
     raw_response: str
     prompt_tokens: int = 0
@@ -47,7 +48,9 @@ class CritiqueResult:
 class IdentityCritic:
     """Critic that evaluates solutions with identity-conditioned prompts."""
 
-    def __init__(self, llm: BaseLLM, model_name: str = "unknown", two_stage: bool = False):
+    def __init__(
+        self, llm: BaseLLM, model_name: str = "unknown", two_stage: bool = False
+    ):
         self.llm = llm
         self.model_name = model_name
         self.two_stage = two_stage
@@ -151,7 +154,11 @@ class IdentityCritic:
                 pass
 
         # Try to find any JSON object in the text (allowing nested braces)
-        match = re.search(r"\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\"is_correct\"[^{}]*(?:\{[^{}]*\}[^{}]*)*\}", text, re.DOTALL)
+        match = re.search(
+            r"\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\"is_correct\"[^{}]*(?:\{[^{}]*\}[^{}]*)*\}",
+            text,
+            re.DOTALL,
+        )
         if not match:
             match = re.search(r"\{.*\"is_correct\".*\}", text, re.DOTALL)
         if match:

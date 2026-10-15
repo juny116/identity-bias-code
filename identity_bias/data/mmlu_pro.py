@@ -1,6 +1,7 @@
 """MMLU-Pro dataset loader (TIGER-Lab/MMLU-Pro)."""
 
 import random
+
 from datasets import load_dataset
 
 from identity_bias.data.base import Problem
@@ -28,22 +29,23 @@ def load_mmlu_pro(
 
         options = item["options"]  # list of strings
         choices_text = "\n".join(
-            f"({OPTION_LABELS[i]}) {opt}"
-            for i, opt in enumerate(options)
+            f"({OPTION_LABELS[i]}) {opt}" for i, opt in enumerate(options)
         )
         question = f"{item['question']}\n\n{choices_text}"
 
-        problems.append(Problem(
-            id=f"mmlu_pro_{item['question_id']}",
-            question=question,
-            ground_truth=item["answer"],  # letter like 'A'-'J'
-            dataset="mmlu_pro",
-            metadata={
-                "category": item["category"],
-                "answer_index": item["answer_index"],
-                "options": options,
-            },
-        ))
+        problems.append(
+            Problem(
+                id=f"mmlu_pro_{item['question_id']}",
+                question=question,
+                ground_truth=item["answer"],  # letter like 'A'-'J'
+                dataset="mmlu_pro",
+                metadata={
+                    "category": item["category"],
+                    "answer_index": item["answer_index"],
+                    "options": options,
+                },
+            )
+        )
 
     if n_samples is not None and n_samples < len(problems):
         rng = random.Random(seed)
@@ -55,6 +57,7 @@ def load_mmlu_pro(
 def check_mmlu_pro_answer(predicted: str, ground_truth: str) -> bool:
     """Check MMLU-Pro answer — both should be a letter A-J."""
     import re
+
     pred = predicted.strip().upper()
     # Extract first letter A-J if surrounded by parentheses or standalone
     match = re.search(r"\b([A-J])\b", pred)

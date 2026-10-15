@@ -1,14 +1,16 @@
 """GSM8K dataset loader."""
 
-import re
 import random
+import re
 
 from datasets import load_dataset
 
 from identity_bias.data.base import Problem
 
 
-def load_gsm8k(split: str = "test", n_samples: int | None = None, seed: int = 42) -> list[Problem]:
+def load_gsm8k(
+    split: str = "test", n_samples: int | None = None, seed: int = 42
+) -> list[Problem]:
     """Load problems from GSM8K dataset.
 
     Args:
@@ -28,12 +30,14 @@ def load_gsm8k(split: str = "test", n_samples: int | None = None, seed: int = 42
         match = re.search(r"####\s*(.+)", answer_text)
         ground_truth = match.group(1).strip() if match else answer_text
 
-        problems.append(Problem(
-            id=f"gsm8k_{split}_{i}",
-            question=item["question"],
-            ground_truth=ground_truth,
-            dataset="gsm8k",
-        ))
+        problems.append(
+            Problem(
+                id=f"gsm8k_{split}_{i}",
+                question=item["question"],
+                ground_truth=ground_truth,
+                dataset="gsm8k",
+            )
+        )
 
     if n_samples is not None and n_samples < len(problems):
         rng = random.Random(seed)
@@ -47,6 +51,7 @@ def check_gsm8k_answer(predicted: str, ground_truth: str) -> bool:
 
     Handles numeric comparison with tolerance for formatting differences.
     """
+
     def extract_number(text: str) -> float | None:
         # Remove commas and whitespace
         text = text.strip().replace(",", "").replace("$", "")

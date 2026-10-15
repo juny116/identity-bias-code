@@ -1,11 +1,10 @@
 """vLLM backend via OpenAI-compatible API."""
 
 import tiktoken
-
 from openai import OpenAI
 
-from identity_bias.config import LLMConfig
 from identity_bias.llm.base import BaseLLM, LLMResponse, TokenLogprob
+from identity_bias.types import LLMConfig
 
 
 class VLLMLlm(BaseLLM):

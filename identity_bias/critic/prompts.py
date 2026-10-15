@@ -2,7 +2,7 @@
 
 import re
 
-from identity_bias.config import IdentityCondition
+from identity_bias.types import IdentityCondition
 
 
 def strip_thinking(text: str) -> str:
@@ -29,8 +29,7 @@ IDENTITY_PREAMBLES = {
         "Please carefully review this solution."
     ),
     IdentityCondition.ANONYMOUS: (
-        "Below is a solution to a problem. "
-        "Please carefully review this solution."
+        "Below is a solution to a problem. Please carefully review this solution."
     ),
     IdentityCondition.HUMAN: (
         "Below is a solution written by a human student. "
@@ -151,7 +150,9 @@ For each solution, you must:
 
 
 # Arm 2: verdict_only_neutral — 3-field schema, neutral instruction.
-VERDICT_ONLY_NEUTRAL_SYSTEM_PROMPT = NEUTRAL_REVIEW_SYSTEM_PROMPT_HEAD + """
+VERDICT_ONLY_NEUTRAL_SYSTEM_PROMPT = (
+    NEUTRAL_REVIEW_SYSTEM_PROMPT_HEAD
+    + """
 
 Respond in the following JSON format:
 {{
@@ -159,11 +160,14 @@ Respond in the following JSON format:
     "error_description": "which step is wrong and why, or null if correct",
     "confidence": 0.0 to 1.0
 }}"""
+)
 
 
 # Arm 3: verdict_schema_matched — 4-field schema, neutral instruction,
 # corrected_answer field present but always null (placeholder).
-VERDICT_SCHEMA_MATCHED_SYSTEM_PROMPT = NEUTRAL_REVIEW_SYSTEM_PROMPT_HEAD + """
+VERDICT_SCHEMA_MATCHED_SYSTEM_PROMPT = (
+    NEUTRAL_REVIEW_SYSTEM_PROMPT_HEAD
+    + """
 
 Respond in the following JSON format:
 {{
@@ -174,11 +178,14 @@ Respond in the following JSON format:
 }}
 
 The `corrected_answer` field is always null in this condition; it is included only to keep the response schema fixed across arms of the experiment."""
+)
 
 
 # Arm 4: verdict_plus_repair — 4-field schema, neutral instruction,
 # corrected_answer is the real model-generated repair.
-VERDICT_PLUS_REPAIR_SYSTEM_PROMPT = NEUTRAL_REVIEW_SYSTEM_PROMPT_HEAD + """
+VERDICT_PLUS_REPAIR_SYSTEM_PROMPT = (
+    NEUTRAL_REVIEW_SYSTEM_PROMPT_HEAD
+    + """
 
 Respond in the following JSON format:
 {{
@@ -187,6 +194,7 @@ Respond in the following JSON format:
     "corrected_answer": "the correct final answer in \\boxed{{}} format",
     "confidence": 0.0 to 1.0
 }}"""
+)
 
 
 # Arm 5 (mechanism test): verdict_plus_repair_reversed — same schema and
@@ -197,7 +205,9 @@ Respond in the following JSON format:
 # generation order (the model talks itself into accepting the candidate
 # while writing the verdict first), reversing the order should either
 # enlarge the effect or change its sign.
-VERDICT_PLUS_REPAIR_REVERSED_SYSTEM_PROMPT = NEUTRAL_REVIEW_SYSTEM_PROMPT_HEAD + """
+VERDICT_PLUS_REPAIR_REVERSED_SYSTEM_PROMPT = (
+    NEUTRAL_REVIEW_SYSTEM_PROMPT_HEAD
+    + """
 
 Respond in the following JSON format:
 {{
@@ -206,17 +216,18 @@ Respond in the following JSON format:
     "is_correct": true or false,
     "confidence": 0.0 to 1.0
 }}"""
+)
 
 
 # Map ablation arm name to system prompt. Arm 1 reuses the existing
 # VERDICT_ONLY_SYSTEM_PROMPT (which includes the "Do NOT" sentence) to
 # anchor the new ablation against the existing Phase E result.
 CAVEAT_A_SYSTEM_PROMPTS = {
-    "verdict_only_instructed":       VERDICT_ONLY_SYSTEM_PROMPT,
-    "verdict_only_neutral":          VERDICT_ONLY_NEUTRAL_SYSTEM_PROMPT,
-    "verdict_schema_matched":        VERDICT_SCHEMA_MATCHED_SYSTEM_PROMPT,
-    "verdict_plus_repair":           VERDICT_PLUS_REPAIR_SYSTEM_PROMPT,
-    "verdict_plus_repair_reversed":  VERDICT_PLUS_REPAIR_REVERSED_SYSTEM_PROMPT,
+    "verdict_only_instructed": VERDICT_ONLY_SYSTEM_PROMPT,
+    "verdict_only_neutral": VERDICT_ONLY_NEUTRAL_SYSTEM_PROMPT,
+    "verdict_schema_matched": VERDICT_SCHEMA_MATCHED_SYSTEM_PROMPT,
+    "verdict_plus_repair": VERDICT_PLUS_REPAIR_SYSTEM_PROMPT,
+    "verdict_plus_repair_reversed": VERDICT_PLUS_REPAIR_REVERSED_SYSTEM_PROMPT,
 }
 
 

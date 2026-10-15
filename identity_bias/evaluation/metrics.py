@@ -1,7 +1,8 @@
 """Metrics computation for identity bias experiments."""
 
+from dataclasses import dataclass
+
 import numpy as np
-from dataclasses import dataclass, field
 
 from identity_bias.critic.identity_critic import CritiqueResult
 
@@ -9,23 +10,29 @@ from identity_bias.critic.identity_critic import CritiqueResult
 @dataclass
 class ConditionMetrics:
     """Aggregated metrics for a single experimental condition."""
+
     condition: str
     n_samples: int
     n_correct_solutions: int
     n_wrong_solutions: int
     # Core metrics
-    detection_accuracy: float      # Overall: critic correctly identifies correct/wrong
-    correction_success_rate: float  # Among wrong solutions: wrong→correct after critique
-    harmful_correction_rate: float  # Among correct solutions: correct→wrong after critique
-    false_error_rate: float         # Correct solutions labeled as wrong
+    detection_accuracy: float  # Overall: critic correctly identifies correct/wrong
+    correction_success_rate: (
+        float  # Among wrong solutions: wrong→correct after critique
+    )
+    harmful_correction_rate: (
+        float  # Among correct solutions: correct→wrong after critique
+    )
+    false_error_rate: float  # Correct solutions labeled as wrong
     # Confidence
     mean_confidence: float
-    confidence_calibration: float   # ECE
+    confidence_calibration: float  # ECE
 
 
 @dataclass
 class SelfCrossGap:
     """Self vs Cross critique performance gap."""
+
     self_detection_accuracy: float
     cross_detection_accuracy: float
     detection_gap: float  # cross - self (positive = cross is better)
@@ -51,10 +58,16 @@ def compute_condition_metrics(
     """
     if not critiques:
         return ConditionMetrics(
-            condition="", n_samples=0, n_correct_solutions=0, n_wrong_solutions=0,
-            detection_accuracy=0, correction_success_rate=0,
-            harmful_correction_rate=0, false_error_rate=0,
-            mean_confidence=0, confidence_calibration=0,
+            condition="",
+            n_samples=0,
+            n_correct_solutions=0,
+            n_wrong_solutions=0,
+            detection_accuracy=0,
+            correction_success_rate=0,
+            harmful_correction_rate=0,
+            false_error_rate=0,
+            mean_confidence=0,
+            confidence_calibration=0,
         )
 
     condition = critiques[0].identity_condition
@@ -81,19 +94,33 @@ def compute_condition_metrics(
     correction_successes = 0
     if check_correction_fn and ground_truths and wrong_solutions:
         for c in wrong_solutions:
-            if not c.is_correct and c.corrected_answer and c.problem_id in ground_truths:
+            if (
+                not c.is_correct
+                and c.corrected_answer
+                and c.problem_id in ground_truths
+            ):
                 if check_correction_fn(c.corrected_answer, ground_truths[c.problem_id]):
                     correction_successes += 1
-    correction_success_rate = correction_successes / len(wrong_solutions) if wrong_solutions else 0
+    correction_success_rate = (
+        correction_successes / len(wrong_solutions) if wrong_solutions else 0
+    )
 
     # Harmful correction rate: correct solutions where critic "corrects" to a wrong answer
     harmful_corrections = 0
     if check_correction_fn and ground_truths and correct_solutions:
         for c in correct_solutions:
-            if not c.is_correct and c.corrected_answer and c.problem_id in ground_truths:
-                if not check_correction_fn(c.corrected_answer, ground_truths[c.problem_id]):
+            if (
+                not c.is_correct
+                and c.corrected_answer
+                and c.problem_id in ground_truths
+            ):
+                if not check_correction_fn(
+                    c.corrected_answer, ground_truths[c.problem_id]
+                ):
                     harmful_corrections += 1
-    harmful_correction_rate = harmful_corrections / len(correct_solutions) if correct_solutions else 0
+    harmful_correction_rate = (
+        harmful_corrections / len(correct_solutions) if correct_solutions else 0
+    )
 
     # Confidence
     confidences = [c.confidence for c in critiques]
@@ -121,17 +148,22 @@ def compute_self_cross_gap(
     return SelfCrossGap(
         self_detection_accuracy=self_metrics.detection_accuracy,
         cross_detection_accuracy=cross_metrics.detection_accuracy,
-        detection_gap=cross_metrics.detection_accuracy - self_metrics.detection_accuracy,
+        detection_gap=cross_metrics.detection_accuracy
+        - self_metrics.detection_accuracy,
         self_correction_success=self_metrics.correction_success_rate,
         cross_correction_success=cross_metrics.correction_success_rate,
-        correction_gap=cross_metrics.correction_success_rate - self_metrics.correction_success_rate,
+        correction_gap=cross_metrics.correction_success_rate
+        - self_metrics.correction_success_rate,
         self_harmful_rate=self_metrics.harmful_correction_rate,
         cross_harmful_rate=cross_metrics.harmful_correction_rate,
-        harmful_gap=self_metrics.harmful_correction_rate - cross_metrics.harmful_correction_rate,
+        harmful_gap=self_metrics.harmful_correction_rate
+        - cross_metrics.harmful_correction_rate,
     )
 
 
-def _compute_ece(confidences: list[float], accuracies: list[int], n_bins: int = 10) -> float:
+def _compute_ece(
+    confidences: list[float], accuracies: list[int], n_bins: int = 10
+) -> float:
     """Compute Expected Calibration Error."""
     if not confidences:
         return 0.0
@@ -142,7 +174,9 @@ def _compute_ece(confidences: list[float], accuracies: list[int], n_bins: int = 
 
     ece = 0.0
     for i in range(n_bins):
-        mask = (confidences > bin_boundaries[i]) & (confidences <= bin_boundaries[i + 1])
+        mask = (confidences > bin_boundaries[i]) & (
+            confidences <= bin_boundaries[i + 1]
+        )
         if mask.sum() == 0:
             continue
         bin_confidence = confidences[mask].mean()

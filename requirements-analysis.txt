@@ -1,0 +1,6 @@
+-r requirements.txt
+pandas
+scipy
+statsmodels
+matplotlib
+seaborn

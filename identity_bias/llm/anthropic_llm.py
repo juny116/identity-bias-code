@@ -2,8 +2,8 @@
 
 from anthropic import Anthropic
 
-from identity_bias.config import LLMConfig
 from identity_bias.llm.base import BaseLLM, LLMResponse
+from identity_bias.types import LLMConfig
 
 
 class AnthropicLLM(BaseLLM):

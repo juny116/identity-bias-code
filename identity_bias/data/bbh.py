@@ -6,7 +6,6 @@ from datasets import load_dataset
 
 from identity_bias.data.base import Problem
 
-
 # Tasks suitable for chain-of-thought critique experiments
 BBH_TASKS = [
     "logical_deduction_three_objects",
@@ -35,13 +34,15 @@ def load_bbh(
         ds = load_dataset("lukaemon/bbh", task, split="test")
 
         for i, item in enumerate(ds):
-            problems.append(Problem(
-                id=f"bbh_{task}_{i}",
-                question=item["input"],
-                ground_truth=item["target"],
-                dataset="bbh",
-                metadata={"task": task},
-            ))
+            problems.append(
+                Problem(
+                    id=f"bbh_{task}_{i}",
+                    question=item["input"],
+                    ground_truth=item["target"],
+                    dataset="bbh",
+                    metadata={"task": task},
+                )
+            )
 
     if n_samples is not None and n_samples < len(problems):
         rng = random.Random(seed)
@@ -52,6 +53,7 @@ def load_bbh(
 
 def check_bbh_answer(predicted: str, ground_truth: str) -> bool:
     """Check BBH answer — normalize and compare strings."""
+
     def normalize(s: str) -> str:
         s = s.strip().lower()
         s = s.strip("()")

@@ -16,12 +16,14 @@ def load_minerva(
 
     problems = []
     for i, item in enumerate(ds):
-        problems.append(Problem(
-            id=f"minerva_{i}",
-            question=item["question"],
-            ground_truth=str(item["answer"]).strip(),
-            dataset="minerva",
-        ))
+        problems.append(
+            Problem(
+                id=f"minerva_{i}",
+                question=item["question"],
+                ground_truth=str(item["answer"]).strip(),
+                dataset="minerva",
+            )
+        )
 
     if n_samples is not None and n_samples < len(problems):
         rng = random.Random(seed)
@@ -33,6 +35,7 @@ def load_minerva(
 def check_minerva_answer(predicted: str, ground_truth: str) -> bool:
     """Check Minerva answer using math_verify, fallback to string."""
     from math_verify import parse, verify
+
     try:
         gold = parse(ground_truth)
         pred = parse(predicted)

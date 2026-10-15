@@ -2,8 +2,8 @@
 
 from openai import OpenAI
 
-from identity_bias.config import LLMConfig
 from identity_bias.llm.base import BaseLLM, LLMResponse, TokenLogprob
+from identity_bias.types import LLMConfig
 
 
 class OpenAILLM(BaseLLM):

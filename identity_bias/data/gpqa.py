@@ -38,16 +38,18 @@ def load_gpqa(
         choices_text = "\n".join(f"({l}) {c}" for l, c in zip(labels, shuffled))
         question = f"{item['Question']}\n\n{choices_text}"
 
-        problems.append(Problem(
-            id=f"gpqa_{subset}_{i}",
-            question=question,
-            ground_truth=correct_letter,
-            dataset="gpqa",
-            metadata={
-                "domain": item.get("Subdomain", ""),
-                "choices": {l: c for l, c in zip(labels, shuffled)},
-            },
-        ))
+        problems.append(
+            Problem(
+                id=f"gpqa_{subset}_{i}",
+                question=question,
+                ground_truth=correct_letter,
+                dataset="gpqa",
+                metadata={
+                    "domain": item.get("Subdomain", ""),
+                    "choices": {l: c for l, c in zip(labels, shuffled)},
+                },
+            )
+        )
 
     if n_samples is not None and n_samples < len(problems):
         problems = rng.sample(problems, n_samples)

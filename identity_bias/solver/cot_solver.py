@@ -2,11 +2,10 @@
 
 import re
 
-from identity_bias.config import Dataset
-from identity_bias.data.base import Problem, Solution
 from identity_bias.data import check_answer
+from identity_bias.data.base import Problem, Solution
 from identity_bias.llm.base import BaseLLM
-
+from identity_bias.types import Dataset
 
 SOLVER_SYSTEM_PROMPT = r"""You are a careful problem solver. Solve the given problem step by step, showing your complete chain of thought.
 
@@ -33,7 +32,10 @@ class CoTSolver:
         """Generate a chain-of-thought solution for the given problem."""
         messages = [
             {"role": "system", "content": SOLVER_SYSTEM_PROMPT},
-            {"role": "user", "content": SOLVER_USER_PROMPT.format(question=problem.question)},
+            {
+                "role": "user",
+                "content": SOLVER_USER_PROMPT.format(question=problem.question),
+            },
         ]
 
         response = self.llm.generate(messages)
@@ -74,7 +76,7 @@ class CoTSolver:
                 depth -= 1
             i += 1
         if depth == 0:
-            return text[start:i - 1].strip()
+            return text[start : i - 1].strip()
         return None
 
     def _extract_answer(self, text: str) -> str:

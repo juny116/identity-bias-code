@@ -1,7 +1,7 @@
 """AIME dataset loader (aime24 + aime25 + aime26 from math-ai collection)."""
 
-import re
 import random
+import re
 
 from datasets import load_dataset
 
@@ -41,13 +41,15 @@ def load_aime(
                 continue
 
             pid = f"aime_{year}_{item.get('id', len(problems))}"
-            problems.append(Problem(
-                id=pid,
-                question=item["problem"],
-                ground_truth=answer,
-                dataset="aime",
-                metadata={"year": year, "url": item.get("url", "")},
-            ))
+            problems.append(
+                Problem(
+                    id=pid,
+                    question=item["problem"],
+                    ground_truth=answer,
+                    dataset="aime",
+                    metadata={"year": year, "url": item.get("url", "")},
+                )
+            )
 
     if n_samples is not None and n_samples < len(problems):
         rng = random.Random(seed)
@@ -58,6 +60,7 @@ def load_aime(
 
 def check_aime_answer(predicted: str, ground_truth: str) -> bool:
     """AIME answers are integers 0-999; compare numerically."""
+
     def extract_int(s: str) -> int | None:
         s = s.strip()
         # Try direct int

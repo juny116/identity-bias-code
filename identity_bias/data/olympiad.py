@@ -52,18 +52,20 @@ def load_olympiad(
         if unit and unit not in ("None", None):
             answer = f"{answer} {unit}"
 
-        problems.append(Problem(
-            id=f"olympiad_{item['id']}",
-            question=item["question"],
-            ground_truth=answer,
-            dataset="olympiad",
-            metadata={
-                "subfield": item["subfield"],
-                "difficulty": item["difficulty"],
-                "answer_type": item["answer_type"],
-                "is_multiple_answer": item["is_multiple_answer"],
-            },
-        ))
+        problems.append(
+            Problem(
+                id=f"olympiad_{item['id']}",
+                question=item["question"],
+                ground_truth=answer,
+                dataset="olympiad",
+                metadata={
+                    "subfield": item["subfield"],
+                    "difficulty": item["difficulty"],
+                    "answer_type": item["answer_type"],
+                    "is_multiple_answer": item["is_multiple_answer"],
+                },
+            )
+        )
 
     if n_samples is not None and n_samples < len(problems):
         rng = random.Random(seed)
@@ -75,6 +77,7 @@ def load_olympiad(
 def check_olympiad_answer(predicted: str, ground_truth: str) -> bool:
     """Check OlympiadBench answer using math_verify, fallback to string."""
     from math_verify import parse, verify
+
     try:
         gold = parse(ground_truth)
         pred = parse(predicted)

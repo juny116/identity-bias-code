@@ -29,3 +29,6 @@ outputs/
 checkpoints/
 node_modules/
 .venv/
+
+.ruff_cache/
+.venv/
