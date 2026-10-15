@@ -1,24 +1,35 @@
 # Identity Bias and Critic Evaluation
 
-언어모델이 답안을 생성하고 평가하는 과정에서 작성자 정체성과 평가 인터페이스를
-어떻게 다룰지 연구한 코드입니다. 결과 수치나 논문 원고는 포함하지 않습니다.
+언어모델이 답안을 평가할 때 작성자 정보에 따라 판단을 바꾸는지 살펴보는 실험 코드입니다. 같은 답안을 자기 답안, 다른 모델의 답안, 사람의 답안 등으로 제시하고 정오 판단, 오류 설명, 수정 답안과 confidence를 비교합니다.
 
-| 코드 | 역할 |
+## 주요 기능
+
+- Solver 모델을 이용한 문제 풀이와 답안 생성
+- 동일한 답안의 작성자 라벨을 바꾸는 identity-swap 평가
+- Solver와 critic 모델 조합별 교차 평가
+- 평가 인터페이스와 질문 형식에 따른 판단 비교
+- 정오 판단, 답안 수정, confidence 및 항목별 불일치 분석
+
+## 코드 구조
+
+| 경로 | 역할 |
 |---|---|
-| `identity_bias/` | 모델 클라이언트, solver·critic, 평가 및 기록 모듈 |
-| `experiments/run_solver_critic_matrix.py` | 모델이 자신의 답과 다른 모델의 답을 평가하는 흐름 |
-| `experiments/run_identity_swap.py` | 정체성 조건을 바꾸는 실험 진입점 |
-| `experiments/interface_confound/` | 평가 인터페이스 조건 |
-| `analysis/` | 비공개 실행 결과를 입력으로 받는 분석 코드 |
-| `legacy/reasoning-error-detect/` | 답안 오류 탐지·검증을 탐색했던 초기 구현 |
-| `archive/old-framing/` | 과거 연구 구성의 분석 구현 |
+| `identity_bias/solver/` | 문제 풀이와 답안 생성 |
+| `identity_bias/critic/` | 작성자 조건별 프롬프트와 critic 응답 파싱 |
+| `identity_bias/llm/` | OpenAI, Anthropic, Gemini, vLLM 모델 클라이언트 |
+| `identity_bias/data/` | 수학·지식 벤치마크 로더와 답안 처리 |
+| `identity_bias/evaluation/` | 조건별 평가 지표 계산 |
+| `identity_bias/logging/` | 실행 기록 저장 |
+| `experiments/` | 답안 생성, identity swap, 모델 조합 및 인터페이스 실험 |
+| `analysis/` | 항목별 판단 차이, 라벨 오류와 조건별 분석 |
+| `legacy/reasoning-error-detect/` | 추론 오류 탐지와 오류 예시 생성 |
+| `archive/old-framing/` | 추가 분석 및 실험 스크립트 |
 
-오류 탐지 초기 코드는 현재 평가 연구와 주제가 연결되므로 이곳에 보존했습니다.
-동일한 실험의 이전 버전이라는 증거가 있는 것은 아니며, 설정·모델·출력 형식이
-다르므로 현재 파이프라인에 섞어 실행하지 않습니다. 초기 스크립트의 상대 import와
-원래 파일 배치를 유지했습니다.
+## 실행 흐름
 
-이 저장소는 코드 보존본입니다. 개인 모델 preset, 데이터, 환경 설정, 논문 소스와
-결과 파일은 제외했습니다. 기존 코드가 참조하는 `identity_bias.config` 등 비공개
-설정 인터페이스를 복원해야 전체 실험이 실행됩니다. 소스 공개와 재현용 배포는
-구분하며, 공개할 경우 이 제한도 명시합니다.
+1. `experiments/run_solver.py`로 문제별 답안을 생성합니다.
+2. `experiments/run_identity_swap.py`로 같은 답안을 여러 작성자 조건에서 평가합니다.
+3. `experiments/run_solver_critic_matrix.py`로 solver–critic 조합을 비교합니다.
+4. `analysis/`의 스크립트로 판단과 답안 수정 양상을 분석합니다.
+
+실험 진입점은 `identity_bias.config`의 모델 preset과 데이터·작성자 조건 정의를 사용합니다. Identity-swap 실행에서는 `--critic-model`, `--solutions-file`, `--conditions`, `--dataset`으로 평가 대상을 선택합니다. `--two-stage`는 정오 판단만 요청하는 호출과 판단·수정을 함께 요청하는 호출을 각각 수행합니다.
